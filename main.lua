@@ -11,9 +11,9 @@ local world = nil
 function love.load()
 	world = love.physics.newWorld()
 	world:setCallbacks( collisions.beginContact, collisions.endContact, collisions.preSolve, collisions.postSolve )
-	table.insert( entities, Unit:new( world, 0, 1, 1 ) )
-	table.insert( entities, Unit:new( world, 0, 1, 3 ) )
-	table.insert( entities, Structure:new( world, 0, 6, 6 ) )
+	table.insert( entities, Unit:new{ world = world, team = 0, x = 1, y = 1 } )
+	table.insert( entities, Unit:new{ world = world, team = 0, x = 1, y = 3 } )
+	table.insert( entities, Structure:new{ world = world, team = 0, x = 6, y = 6 } )
 end
 
 function love.update( dt )

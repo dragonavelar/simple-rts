@@ -4,32 +4,31 @@ local Entity = class('Entity')
 
 local STATE_BAMBOOZLED = "BAMBOOZLED"
 
-function Entity:initialize( world, team, x, y, type, radius, maxspeed, linear_damping, angular_damping, mass, sight_radius )
+function Entity:initialize( args )
 	-- Variable initializations
-	local x, y = x or 0, y or 0 -- I'm in position!
-	local radius = radius or 1 -- Do I look fat?
-	local maxspeed = maxspeed or 1 -- So fast, wow. o:
-	local linear_damping, angular_damping = linear_damping or 1, angular_damping or 1 -- So dank... *Cough cough*, damp
-	local mass = mass or 1 -- So dense, wow. o:
-	local strenght = strenght or 11 -- So stronk, wow. o:
-	local sight_radius = sight_radius or 1 + radius -- Give me vision beyond reach
-	local type = type or "dynamic"
+	if type( args.world ) ~= "userdata" then error("Remember to send a world!") end
+	args.team = args.team or 0
+	args.x, args.y = args.x or 0, args.y or 0 -- I'm in position!
+	args.radius = args.radius or 1 -- Do I look fat?
+	args.body_type = args.body_type or "dynamic"
+	args.linear_damping, args.angular_damping = args.linear_damping or 1, args.angular_damping or 1 -- So dank... *Cough cough*, damp
+	args.mass = args.mass or 1 -- So dense, wow. o:
+	if args.fixed_rotation == nil then args.fixed_rotation = true end
+	args.sight_radius = args.sight_radius -- Give me vision beyond reach
 	-- Let the body hit the floor
-	self.body = love.physics.newBody( world, x, y, type )
-	self.body:setAngularDamping( angular_damping )
-	self.body:setLinearDamping( linear_damping )
-	self.body:setMass( mass )
-	self.body:setFixedRotation( true )
+	self.body = love.physics.newBody( args.world, args.x, args.y, args.body_type )
+	self.body:setAngularDamping( args.angular_damping )
+	self.body:setLinearDamping( args.linear_damping )
+	self.body:setMass( args.mass )
+	self.body:setFixedRotation( args.fixed_rotation )
 	-- The shape of you
-	self.shape = love.physics.newCircleShape( radius )
+	self.shape = love.physics.newCircleShape( args.radius )
 	-- Fixin' dem shapes to dat boody
 	self.fixture = love.physics.newFixture( self.body, self.shape )
 	self.fixture:setUserData(self)
-	-- Gotta go fast
-	self.maxspeed = maxspeed
 	-- Object variables
-	self.team = team
-	self.sight_radius = sight_radius
+	self.team = args.team
+	self.sight_radius = args.sight_radius
 	self.state = STATE_BAMBOOZLED
 	self.alive = true
 end

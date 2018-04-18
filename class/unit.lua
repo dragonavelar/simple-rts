@@ -6,21 +6,30 @@ local Unit = class('Unit', Entity)
 local STATE_IDLE = "IDLE"
 local STATE_MOVING = "MOVING"
 
-function Unit:initialize( world, team, x, y, radius, maxspeed, linear_damping, angular_damping, mass, sight_radius, strenght, initial_target )
+function Unit:initialize( args )
 	-- Variable initializations
-	local x, y = x or 0, y or 0
-	local radius = radius or 0.5
-	local maxspeed = maxspeed or 1 -- So fast, wow. o:
-	local linear_damping, angular_damping = linear_damping or 1, angular_damping or 1 -- So dank... *Cough cough*, damp
-	local mass = mass or 1 -- So dense, wow. o:
-	local strenght = strenght or 10 -- So stronk, wow. o:
-	local sight_radius = sight_radius or 4 + radius -- Give me vision beyond reach
-	Entity.initialize( self, world, team, x, y, "dynamic", radius, maxspeed, linear_damping, angular_damping, mass, sight_radius )
+	args.radius = args.radius or 0.5
+	Entity.initialize(
+		self,
+		{
+			world = args.world,
+			team = args.team,
+			x = args.x,
+			y = args.y,
+			body_type = "dynamic",
+			radius = args.radius,
+			linear_damping = args.linear_damping,
+			angular_damping = args.angular_damping,
+			mass = args.mass or 1,
+			sight_radius = args.sight_radius or 4 + args.radius
+		}
+	)
 	
 	-- Object variables
-	self.strenght = strenght -- So stronk
-	self.target = initial_target -- Moving to position!
+	self.strenght = args.strenght or 10 -- So stronk, wow o:
+	self.target = args.initial_target -- Moving to position!
 	self.state = STATE_IDLE
+	self.maxspeed = args.maxspeed or 1000
 end
 
 function Unit:draw( screen_manager )

@@ -7,19 +7,22 @@ local Structure = class('Structure', Entity)
 local STATE_IDLE = "IDLE"
 local STATE_BUILDING = "BUILDING"
 
-function Structure:initialize( world, team, x, y, radius, maxspeed, linear_damping, angular_damping, mass, sight_radius, target )
-	-- Variable initializations
-	local x, y = x or 0, y or 0
-	local radius = radius or 2.0
-	local maxspeed = maxspeed or 1 -- So fast, wow. o:
-	local linear_damping, angular_damping = linear_damping or 1, angular_damping or 1 -- So dank... *Cough cough*, damp
-	local mass = mass or 1 -- So dense, wow. o:
-	local strenght = strenght or 10 -- So stronk, wow. o:
-	local sight_radius = sight_radius or 4 + radius -- Give me vision beyond reach
-	local default_target = {}
-	default_target.x, default_target.y = x + radius * 2, y + radius * 2
-	local target = target or default_target
-	Entity.initialize( self, world, team, x, y, "static", radius, maxspeed, linear_damping, angular_damping, mass, sight_radius )
+local default_target = function(x,y,r) return x + r + 2, y + r + 2 end
+
+function Structure:initialize( args )
+	args.radius = args.radius or 2.0
+	args.target = args.target or default_target( args.x, args.y, args.radius )
+	Entity.initialize( self,
+		{
+			world = args.world,
+			team = args.team,
+			x = args.x, y = args.y,
+			body_type = "static",
+			radius = args.radius,
+			mass = args.mass or 1,
+			sight_radius = args.sight_radius or 4 + args.radius
+		}
+	)
 	
 	-- Object variables
 	self.build = nil -- Imma not gonna do anything!
@@ -43,7 +46,7 @@ function Structure:update( dt )
 		local r = self:getRadius()
 		self.build = nil
 		self.state = STATE_IDLE
-		return { Unit:new( self:getWorld(), self.team, sx + r, sy + r,  nil, nil, nil, nil, nil, nil, nil, self.target ) }
+		return { Unit:new{ world = self:getWorld(), team = self.team, x = sx + r, y = sy + r, target = self.target } }
 	end
 end
 

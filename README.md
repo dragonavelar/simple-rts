@@ -1,11 +1,14 @@
 # simple-rts
-MVP RTS for LD41 warmup made with LÖVE.
+MVP RTS for LD41 warmup made with [LÖVE](https://love2d.org/).
+
+# Information
+* This uses the [middleclass library](https://github.com/kikito/middleclass/) for object orientation.
+* Object initializers have named arguments [PIL link](https://www.lua.org/pil/5.3.html). 
 
 # TO-DO
 
 To-Do List to achieve the MVP, items with a dollar sign at the end are extras:
 
-* Change object initializers to have named arguments [PIL link](https://www.lua.org/pil/5.3.html). 
 * Have a "selected units" structure so that orders are sent only to those units.
   * Make minimal UI stating what each input causes a unit to do.
   * Make control-selection expansion.
