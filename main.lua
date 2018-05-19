@@ -40,6 +40,7 @@ function love.update( dt )
 end
 
 function love.draw()
+	local k, v = nil, nil
 	for k, v in pairs( entities ) do
 		v:draw( sm )
 	end
